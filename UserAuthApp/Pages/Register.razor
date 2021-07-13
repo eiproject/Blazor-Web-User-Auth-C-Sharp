@@ -1,0 +1,41 @@
+﻿@page "/register"
+
+  <title>
+    Register Page
+  </title>
+  <div class="d-flex justify-content-center">
+    <div class="mt-5">
+      <h5 class="text-center">Register Here! @_hello</h5>
+      <div class="pt-5">
+        <form class="">
+          <div class="form-group">
+            <label for="email">Email: </label>
+            <input class="form-control" id="email" name="email" type="email" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password: </label>
+            <input class="form-control" id="password" name="password" type="password" />
+          </div>
+          <div class="form-group">
+            <label for="retype-password">Retype Password: </label>
+            <input class="form-control" id="retype-password" name="retype-password" type="password" />
+          </div>
+          <div class="form-group">
+            <input class="form-control btn-dark" type="button" value="Save" @onclick="Hello"/>
+          </div>
+          <div>
+            <small>Already have account? <a href="/login">login here!</a></small>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  @code {
+    private string _hello;
+    void Hello() {
+      _hello = "haalloww";
+      Console.WriteLine(_hello);
+    }
+  }
