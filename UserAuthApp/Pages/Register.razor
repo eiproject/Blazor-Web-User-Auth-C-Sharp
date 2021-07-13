@@ -1,41 +1,82 @@
 ﻿@page "/register"
+@using UserAuth.Models
+@using UserAuth
 
-  <title>
-    Register Page
-  </title>
-  <div class="d-flex justify-content-center">
-    <div class="mt-5">
-      <h5 class="text-center">Register Here! @_hello</h5>
-      <div class="pt-5">
-        <form class="">
-          <div class="form-group">
-            <label for="email">Email: </label>
-            <input class="form-control" id="email" name="email" type="email" />
-          </div>
-          <div class="form-group">
-            <label for="password">Password: </label>
-            <input class="form-control" id="password" name="password" type="password" />
-          </div>
-          <div class="form-group">
-            <label for="retype-password">Retype Password: </label>
-            <input class="form-control" id="retype-password" name="retype-password" type="password" />
-          </div>
-          <div class="form-group">
-            <input class="form-control btn-dark" type="button" value="Save" @onclick="Hello"/>
-          </div>
-          <div>
-            <small>Already have account? <a href="/login">login here!</a></small>
-          </div>
-        </form>
-      </div>
+<title>
+  Register Page
+</title>
+<div class="d-flex justify-content-center">
+  <div class="mt-5 pt-5">
+    <h5 class="text-center">Register Here!</h5>
+    <div class="">
+      <form class="">
+        <div>
+          <small id="error-message" class="text-danger text-center">@_message</small>
+          <small id="error-message" class="text-success text-center">@_success_message</small>
+        </div>
+        <div>
+          <label for="email">Email: </label>
+          <input @bind="_email" class="form-control" id="email" name="email" type="email"
+                 required />
+        </div>
+        <div>
+          <label for="password">Password: </label>
+          <input @bind="_password" class="form-control" id="password" name="password" type="password"
+                 min="6" required />
+        </div>
+        <div>
+          <label for="retype-password">Retype Password: </label>
+          <input @bind="_repassword" class="form-control" id="retype-password" name="retype-password" type="password"
+                 min="6" required />
+        </div>
+        <div>
+          <input class="form-control btn-dark mt-1" type="button" value="Register" @onclick="RegisterUser" />
+        </div>
+        <div>
+          <small>Already have account? <a href="/login">login here!</a></small>
+        </div>
+      </form>
     </div>
+    @_allUser
   </div>
+</div>
 
 
-  @code {
-    private string _hello;
-    void Hello() {
-      _hello = "haalloww";
-      Console.WriteLine(_hello);
+@code {
+  private string _allUser;
+  private string _message;
+  private string _success_message;
+  private string _email="";
+  private string _password;
+  private string _repassword;
+
+  void RegisterUser() {
+    if (_email.Length < 5 || !_email.Contains("@")) {
+      _message = "Email invalid";
+      _success_message = "";
     }
+    else if (_password != _repassword || _password == null || _repassword == null) {
+      _message = "Password not match";
+      _success_message = "";
+    }
+    else {
+      IDatabase DatabaseInstance = UserDatabase.GetInstance();
+      if (DatabaseInstance.IsUserAlreadyRegistered(_email)) {
+        _message = "User already registered";
+        _success_message = "";
+      }
+      else {
+        IUser NewUser = new User();
+        IUserLogic Register = new UserLogic(DatabaseInstance, NewUser);
+        Register.CreateUser(_email, _password);
+
+        _allUser = DatabaseInstance.GetAllUser();
+        _message = "";
+        _success_message = "Success";
+      }
+    }
+
   }
+
+
+}

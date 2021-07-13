@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using UserAuth.Models;
 
 namespace UserAuth {
   public class Program {
