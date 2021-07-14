@@ -66,7 +66,8 @@
         _success_message = "";
       }
       else {
-        IUser NewUser = new User();
+        Encryption encrypt = new Encryption();
+        IUser NewUser = new User(encrypt);
         IUserLogic Register = new UserLogic(DatabaseInstance, NewUser);
         Register.CreateUser(_email, _password);
 

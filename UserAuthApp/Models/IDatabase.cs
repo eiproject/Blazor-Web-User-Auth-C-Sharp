@@ -8,5 +8,7 @@ namespace UserAuth.Models {
     void AddUserToDatabase(IUser newUser);
     string GetAllUser();
     bool IsUserAlreadyRegistered(string email);
+    bool UserAuthentication(string email, string password, Encryption encrypt);
   }
 }
+// NancyFx

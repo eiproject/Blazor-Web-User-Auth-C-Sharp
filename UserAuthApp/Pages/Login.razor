@@ -8,16 +8,20 @@
       <h5 class="text-center">Login Here!</h5>
       <div class="pt-5">
         <form class="">
-          <div class="form-group">
+          <div>
+            <small id="error-message" class="text-danger text-center">@_message</small>
+            <small id="error-message" class="text-success text-center">@_success_message</small>
+          </div>
+          <div class="">
             <label for="email">Email: </label>
-            <input class="form-control" id="email" name="email" type="email" />
+            <input @bind="_email" class="form-control" id="email" name="email" type="email" />
           </div>
-          <div class="form-group">
+          <div class="">
             <label for="password">Password: </label>
-            <input class="form-control" id="password" name="password" type="password" />
+            <input @bind="_password" class="form-control" id="password" name="password" type="password" />
           </div>
-          <div class="form-group">
-            <input class="form-control btn-dark" type="button" value="Save" />
+          <div class="">
+            <input class="form-control btn-dark" type="button" @onclick="LoginUser" value="Login" />
           </div>
           <div>
             <small>Don't have account? <a href="/register">click here!</a></small>
@@ -27,7 +31,25 @@
     </div>
   </div>
 
-
   @code {
+    private string _message;
+    private string _success_message;
+    private string _email;
+    private string _password;
+    private IDatabase _databaseInstance;
+    private bool _isValidAuth = false;
 
+    void LoginUser() {
+      Encryption encrypt = new Encryption();
+      _databaseInstance = UserDatabase.GetInstance();
+      _isValidAuth = _databaseInstance.UserAuthentication(_email, _password, encrypt);
+      if (_isValidAuth) {
+        _message = "";
+        _success_message = "Login Success";
+      }
+      else {
+        _message = "Login Failed";
+        _success_message = " ";
+      }
+    }
   }

@@ -31,7 +31,7 @@ namespace UserAuth.Models {
       return allUserEmail;
     }
 
-    public bool IsUserAlreadyRegistered(string email) {
+    bool IDatabase.IsUserAlreadyRegistered(string email) {
       IEnumerable<IUser> filteredData = _userDatabase.Where(data => data.GetEmail() == email);
       if (filteredData.Count() != 0) {
         return true;
@@ -39,7 +39,26 @@ namespace UserAuth.Models {
       else {
         return false;
       }
-      
+    }
+    bool IDatabase.UserAuthentication(string email, string password, Encryption encrypt) {
+      if (_instance.IsUserAlreadyRegistered(email)) {
+        string databasePassword = CheckUserHashedPassword(email);
+        if (encrypt.EncryptPassword(password) == databasePassword) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      else {
+        Console.WriteLine("User doesn't exist.");
+        return false;
+      }
+    }
+    string CheckUserHashedPassword(string email) {
+      IEnumerable<IUser> filteredData = _userDatabase.Where(data => data.GetEmail() == email);
+      IUser currentUser = filteredData.First();
+      return currentUser.GetPassword();
     }
   }
 }
